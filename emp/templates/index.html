@@ -1,0 +1,176 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">  
+    <title>Employee Dashboard</title>
+    <meta name="description" content="">
+    <meta name="author" content="templatemo">
+    <!-- 
+    Visual Admin Template
+    https://templatemo.com/tm-455-visual-admin
+    -->
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,400italic,700' rel='stylesheet' type='text/css'>
+    
+    <link rel="stylesheet" href="{% static 'css/font-awesome.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/templatemo-style.css' %}">
+
+    <!-- Font Icon  addemp-->
+    <link rel="stylesheet" href="static/fonts/material-icon/css/material-design-iconic-font.min.css">
+
+    <!-- Main css addemp -->
+    <link rel="stylesheet" href="static/css/style.css">
+     <!-- NOTIFY MSGE BOX -->
+  <script type="text/javascript" src="{% static 'bootstrap-notify-master/bootstrap-notify-master/bootstrap-notify.min.js' %}"></script>
+  <script src="https://cdn.jsdelivr.net/npm/noty@3.2.0-beta/lib/noty.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/noty@3.2.0-beta/lib/noty.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/noty@3.2.0-beta/lib/themes/metroui.css">
+   
+
+  </head>
+  <body>  
+    <!-- Left column -->
+    <!-- <div class="templatemo-flex-row" > -->
+      <div class="templatemo-flex-row" style="position: fixed; width: 100%;">
+      <div class="templatemo-sidebar">
+        <header class="templatemo-site-header">
+          <div class="square"></div>
+          <h1>A B C</h1>
+        </header>
+      
+        <div class="mobile-menu-icon">
+            <i class="fa fa-bars"></i>
+        </div>
+        <nav class="templatemo-left-nav">          
+          <ul>
+            <li><a href="/load_dashboard" class="active" ><i class="fa fa-home fa-fw"></i>Dashboard</a></li>
+          
+            {% if users.role == 'admin' %}
+            <li><a href="/add_employee"><i class="fa fa-sliders fa-fw"></i>Add Employee</a></li>
+            {% endif %}
+           
+            <li><a href="/view_employee"><i class="fa fa-sliders fa-fw"></i>View Employee</a></li>
+           
+            <li><a href="/logout"><i class="fa fa-eject fa-fw"></i>Sign Out</a></li>
+          </ul>  
+        </nav>
+      </div>
+      <!-- Main content --> 
+      <div class="templatemo-content col-1 light-gray-bg">
+        <div class="templatemo-top-nav-container" >
+          <div class="row">
+            <nav class="templatemo-top-nav col-lg-12 col-md-12">
+              <ul class="text-uppercase">
+               
+                <li><a href="/load_dashboard" class="active">Dashboard</a></li>
+              
+                {% if users.role == 'admin' %}
+              
+                <li><a href="/add_employee">New Employee</a></li>
+                {% endif %}
+               
+                <li><a href="/logout"><i class="fa fa-eject fa-fw"></i>Sign Out</a></li>
+              </ul>  
+            </nav> 
+          </div>
+        </div>
+        <div class="templatemo-content-container4" style="overflow-y:scroll;height:500px;width:100%">
+          <!-- <div class="templatemo-content-container "> -->
+        {% block content %}
+        {% endblock %}
+        </div>
+      </div>
+    </div>
+    <footer class="text-right">
+      <p>Copyright &copy; 2084 Company Name 
+      | Design: Template Mo</p>
+    </footer>
+      <!-- Google Chart -->
+      <script src="https://www.google.com/jsapi"></script> 
+    <!-- JS -->
+    <script src="static/js/jquery-1.11.2.min.js"></script>      <!-- jQuery -->
+    <script src="static/js/jquery-migrate-1.2.1.min.js"></script> <!--  jQuery Migrate Plugin -->
+ 
+    
+    <!-- JS addemp-->
+    <script src="static/vendor/jquery/jquery.min.js"></script>
+    <script src="static/js/templatemo-script.js"></script>
+    <script src="static/js/main.js"></script>
+    <script type="text/javascript"> window.CSRF_TOKEN = "{{ csrf_token }}"; </script>
+    
+    <script>
+      var mr;
+      var mw;
+        $(document).ready(function() {
+         
+        $.ajax({
+            url:'/chartdata_fetch',
+            type:'POST',
+            data:{csrfmiddlewaretoken: window.CSRF_TOKEN,},
+
+            success:function(data) {
+              console.log(data.men_rate)
+              mr=data.men_rate
+              mw=data.women_rate
+              
+            }
+          })
+        });
+      
+      google.load('visualization', '1.0', {'packages':['corechart']});
+
+      // Set a callback to run when the Google Visualization API is loaded.
+      google.setOnLoadCallback(drawChart); 
+     
+      function drawChart() {
+       
+
+          // Create the data table.
+          var data = new google.visualization.DataTable();
+          data.addColumn('string', 'Topping');
+          data.addColumn('number', 'Slices');
+          data.addRows([
+            ['Men',mr],
+            ['Women', mw],
+           
+          ]);
+         
+          // Set chart options
+          var options = {'title':'Employee Gender Ratio'};
+
+          // Instantiate and draw our chart, passing in some options.
+          var pieChart = new google.visualization.PieChart(document.getElementById('pie_chart_div'));
+          pieChart.draw(data, options);
+
+          var barChart = new google.visualization.BarChart(document.getElementById('bar_chart_div'));
+          barChart.draw(data, options);
+      }
+
+      $(document).ready(function(){
+        if($.browser.mozilla) {
+         
+          $(window).bind('resize', function(e)
+          {
+            if (window.RT) clearTimeout(window.RT);
+            window.RT = setTimeout(function()
+            {
+              this.location.reload(false); /* false to get page from cache */
+            }, 200);
+          });      
+        } else {
+          $(window).resize(function(){
+            drawChart();
+          });  
+        }   
+      });
+      
+    </script>
+    
+    
+    <script type="text/javascript" src="static/js/templatemo-script.js"></script>      <!-- Templatemo Script -->
+
+  </body>
+</html>

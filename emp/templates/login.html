@@ -1,0 +1,62 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+	    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+	    <meta name="viewport" content="width=device-width, initial-scale=1">  
+	    <title>Employee - Login</title>
+        <meta name="description" content="">
+        <meta name="author" content="templatemo">
+      
+	    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,400italic,700' rel='stylesheet' type='text/css'>
+	   
+		<link rel="stylesheet" href="{% static 'css/font-awesome.min.css' %}">
+		<link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+		<link rel="stylesheet" href="{% static 'css/templatemo-style.css' %}">
+	  
+	</head>
+	<body class="light-gray-bg">
+		<div class="templatemo-content-widget templatemo-login-widget white-bg" >
+			<header class="text-center">
+	          <div class="square"></div>
+	          <h1>A B C</h1>
+			</header>
+			{% if messages %}
+				<!-- {% for message in messages %} -->
+				<div class="alert {{ message.tags }} alert-dismissible" role="alert">
+				<!-- <button type="button" class="close" data-dismiss="alert" aria-label="Close"> -->
+					<!-- <span aria-hidden="true" >&times;</span>
+				</button> -->
+				<span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span> 
+				{{ message }}
+				</div>
+			<!-- {% endfor %} -->
+			{% endif %}
+  
+	        <form  class="templatemo-login-form" method="POST" >
+				{% csrf_token %}
+	        	<div class="form-group">
+	        		<div class="input-group">
+		        		<div class="input-group-addon"><i class="fa fa-user fa-fw"></i></div>	        		
+		              	<input type="text" class="form-control" placeholder="js@dashboard.com" name="username">           
+		          	</div>	
+				</div>
+				<br>
+				  <br>
+	        	<div class="form-group">
+	        		<div class="input-group">
+		        		<div class="input-group-addon"><i class="fa fa-key fa-fw"></i></div>	        		
+		              	<input type="password" class="form-control" placeholder="******" name="password">           
+		          	</div>	
+	        	</div>	          	
+				  <br>
+				  <br>
+				<div class="form-group">
+					<button type="submit" class="templatemo-blue-button width-100">Login</button>
+				</div>
+	        </form>
+		</div>
+		
+	</body>
+</html>
